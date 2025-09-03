@@ -12,7 +12,7 @@ if USE_EXCEL:
 else:
     # Esempio con PostgreSQL (Railway)
     conn = get_connection()
-    df = pd.read_sql("SELECT * FROM persone", conn)
+    df = pd.read_sql("SELECT * FROM valutazioni", conn)
 
 @app.route("/", methods=["GET"])
 def search():
