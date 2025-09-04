@@ -16,7 +16,7 @@ def create_df_from_xlsx(primo_anno,ultimo_anno):
 
 def get_voti (name,voti_studenti):
     #print(voti_studenti)
-    col_voti = ["studente", "materia", "voto", "anno_di_corso","anno"]
-    ris_voti = voti_studenti[voti_studenti["studente"].str.contains(name, case=False, na=False)]
-    ris_voti_ord = ris_voti.sort_values(by="studente").sort_values(by="anno_di_corso")
+    col_voti = ["Studente", "Materia", "Voto", "Anno di corso","Anno"]
+    ris_voti = voti_studenti[voti_studenti["Studente"].str.contains(name, case=False, na=False)]
+    ris_voti_ord = ris_voti.sort_values(by="Studente").sort_values(by="Anno di corso")
     return ris_voti_ord[col_voti]

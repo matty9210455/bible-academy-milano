@@ -13,6 +13,13 @@ else:
     # Esempio con PostgreSQL (Railway)
     conn = get_connection()
     df = pd.read_sql("SELECT * FROM valutazioni", conn)
+    df = df.rename(columns={
+    "studente": "Studente",
+    "materia": "Materia",
+    "voto": "Voto",
+    "anno_di_corso": "Anno di corso",
+    "anno": "Anno"
+})
     print(df)
 
 @app.route("/", methods=["GET"])
