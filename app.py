@@ -13,6 +13,7 @@ else:
     # Esempio con PostgreSQL (Railway)
     conn = get_connection()
     df = pd.read_sql("SELECT * FROM valutazioni", conn)
+    print(df)
 
 @app.route("/", methods=["GET"])
 def search():
