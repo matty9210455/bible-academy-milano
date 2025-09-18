@@ -4,5 +4,5 @@ sqlalchemy
 psycopg2-binary
 openpyxl
 gunicorn
-db_firebase
+firebase_admin
 numpy
