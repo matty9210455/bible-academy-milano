@@ -1,37 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ricerca Nome</title>
+    <title>Ricerca Studenti</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f2f2f2; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .tab { border: 1px solid #ccc; margin: 10px 0; border-radius: 8px; overflow: hidden; }
+        .tab-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f2f2f2;
+            padding: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .tab-header span {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .arrow { transition: transform 0.3s; }
+        .arrow.rotate { transform: rotate(90deg); }
+        .tab-content { display: none; padding: 10px; }
+        h2 { margin-top: 0; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 10px; }
+        th, td { border: 1px solid #aaa; padding: 5px; text-align: left; }
+
+        /* --- Mobile friendly --- */
+        @media (max-width: 768px) {
+            table, thead, tbody, tr, th, td { display: block; width: 100%; }
+            thead { display: none; }
+            tr { margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; padding: 8px; background: #fafafa; }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                min-height: 25px;
+            }
+            td:last-child { border-bottom: none; }
+            td::before {
+                position: absolute;
+                left: 10px;
+                top: 5px;
+                white-space: nowrap;
+                font-weight: bold;
+                content: attr(data-label);
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>Ricerca nel Database</h2>
+    <h1>Ricerca Studenti</h1>
     <form method="get">
-        <input type="text" name="query" placeholder="Cerca nome...">
-        <button type="submit">Cerca</button>
+          <input type="text" name="query" placeholder="Cerca nome...">
+          <button type="submit">Cerca</button>
     </form>
 
-    {% if results is not none %}
-        <h3>Risultati:</h3>
-        <table>
-            <tr>
-                {% for col in results.columns %}
-                <th>{{ col }}</th>
-                {% endfor %}
-            </tr>
-            {% for row in results.itertuples(index=false) %}
-            <tr>
-                {% for value in row %}
-                <td>{{ value }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
+    {% if risultati %}
+        <h2>Risultati:</h2>
+        {% for studente, dati in risultati.items() %}
+            <div class="tab">
+                <div class="tab-header" onclick="toggleTab(this)">
+                    <span>{{ studente }}</span>
+                    <span class="arrow">▶</span>
+                </div>
+                <div class="tab-content">
+                    {% if dati.info %}
+                    <h4>Dati Studente</h4>
+                    <table>
+                        <tr>
+                            {% for k, v in dati.info.items() %}
+                                <td data-label="{{ k }}">{{ v }}</td>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                    {% else %}
+                        <p><i>Nessun dato anagrafico trovato in "studenti"</i></p>
+                    {% endif %}
+
+                    <h4>Iscrizioni</h4>
+                    {% if dati.iscrizioni %}
+                    <table>
+                        {% for row in dati.iscrizioni %}
+                        <tr>
+                            {% for k, v in row.items() %}
+                                <td data-label="{{ k }}">{{ v }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                        <p><i>Nessuna iscrizione trovata</i></p>
+                    {% endif %}
+
+                    <h4>Voti</h4>
+                    {% if dati.voti %}
+                    <table>
+                        {% for row in dati.voti %}
+                        <tr>
+                            {% for k, v in row.items() %}
+                                <td data-label="{{ k }}">{{ v }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                        <p><i>Nessun voto trovato</i></p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
     {% endif %}
+
+    <script>
+        function toggleTab(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector(".arrow");
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                arrow.classList.remove("rotate");
+            } else {
+                content.style.display = "block";
+                arrow.classList.add("rotate");
+            }
+        }
+    </script>
 </body>
 </html>
