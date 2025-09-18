@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import pandas as pd
 import json
-from config_local_app import CREDENTIAL,IS_LOCAL,PATH_CREDENTIAL
+from config_local_app import CREDENTIAL_FIREBASE,IS_LOCAL,PATH_CREDENTIAL
 
 
 # Inizializza Firebase
@@ -11,9 +11,9 @@ def intialize_db_firebase():
     if IS_LOCAL:
         cred = credentials.Certificate(PATH_CREDENTIAL+"serviceAccountKey.json")
     else:
-        cred = credentials.Certificate(CREDENTIAL)
-    firebase_admin.initialize_app(cred)
-    return firestore.client()
+        cred = credentials.Certificate(json.loads(CREDENTIAL_FIREBASE))
+        firebase_admin.initialize_app(cred)
+        return firestore.client()
 
 def upload_dataframe_to_firestore(db, df, collection_name,id_col):
     for i, row in df.iterrows():
